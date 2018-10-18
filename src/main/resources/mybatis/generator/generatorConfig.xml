@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <context id="allenTest" targetRuntime="MyBatis3">
+        <!-- 
+	            常见的官方写好的plugins有
+	            org.mybatis.generator.plugins.CachePlugin.java
+	                                        CaseInsensitiveLikePlugin.java
+	                                        EqualsHashCodePlugin.java
+	                                        FluentBuilderMethodsPlugin.java
+	                                        MapperAnnotationPlugin.java
+	                                        MapperConfigPlugin.java
+	                                        RenameExampleClassPlugin.java
+	                                        RowBoundsPlugin.java
+	                                        SerializablePlugin.java
+	                                        ToStringPlugin.java
+	                                        UnmergeableXmlMappersPlugin.java
+	                                        VirtualPrimaryKeyPlugin.java
+	            个人觉得还差一个注释plugin,可将数据库的字段的注释生成在类里,减少查看数据库字段含义,可以自己开发,但通用性不如官方
+        -->
+        <!-- 生成的pojo，将implements Serializable -->
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"></plugin>
+        <!-- 生成xml不追加,直接覆盖 -->
+        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"></plugin>
+        <!-- 生成的pojo带有toString方法 -->
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"></plugin>
+
+        <commentGenerator>
+            <!-- 这个元素用来去除指定生成的注释中是否包含生成的日期 false:表示保护 -->
+            <!-- 如果生成日期，会造成即使修改一个字段，整个实体类所有属性都会发生变化，不利于版本控制，所以设置为true -->
+            <property name="suppressDate" value="true" />
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+    
+        <!-- 数据库连接信息 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+            connectionURL="jdbc:mysql://192.168.0.234:3306/allen_test?useUnicode=true&amp;characterEncoding=UTF-8"
+            userId="dcc_dev" password="123456" />
+            
+        <!-- java类型处理器 
+			            用于处理DB中的类型到Java中的类型，默认使用JavaTypeResolverDefaultImpl；
+			            注意一点，默认会先尝试使用Integer，Long，Short等来对应DECIMAL和 NUMERIC数据类型； 
+	    --> 
+	    <javaTypeResolver>
+	        <!-- 
+	            true：使用BigDecimal对应DECIMAL和 NUMERIC数据类型
+	            false：默认,
+	                scale>0;length>18：使用BigDecimal;
+	                scale=0;length[10,18]：使用Long；
+	                scale=0;length[5,9]：使用Integer；
+	                scale=0;length<5：使用Short；
+	         -->  
+	        <property name="forceBigDecimals" value="false" />    
+	    </javaTypeResolver> 
+	    
+        <!--entity实体类-->
+        <javaModelGenerator targetPackage="com.allen.entity"
+            targetProject="./src/main/java" />
+            
+        <!-- mybatis映射xml文件 -->
+        <sqlMapGenerator targetPackage="mybatis/mapper"
+            targetProject="./src/main/resources" />
+            
+        <!--mapper接口 -->
+        <javaClientGenerator targetPackage="com.allen.dao"
+            targetProject="./src/main/java" type="XMLMAPPER" />
+            
+        <!--数据表-->
+        <!-- 需要生成的表 -->
+        <!-- 可以写上不存在的表不抛错,只是忽略,例如表tb_xxyyzz -->
+        <!-- schema随便写(可以不写）,mysql无schema概念,orcle中schema跟用户名相同,每个用户名都有一个与之同名的schema,例如scott用户有scott的schema -->
+        <!-- domainObjectName指定生成的model的类名,可以默认不指定 -->
+        <!-- enableCountByExample等属性控制是否生成该方法,默认生成 -->
+        <!-- %匹配所有表格 -->
+        <!-- <table tableName="%" ></table> -->
+        <!-- 如果有自增长的id，希望在插入后获得id，可以配置generatedKey，需要指定column，
+        sqlStatement未Mysql，identity必须为true。，在java端，insert(entity)后，由entity.getXxxId()获得自增长的id -->
+        <!-- 非自增长的不要出现generatedKey，否则报错 -->
+        <table tableName="activity_info"></table>
+    </context>
+</generatorConfiguration>
